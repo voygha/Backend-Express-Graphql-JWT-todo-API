@@ -42,7 +42,8 @@ npm init -y
 ```
 
 ### Instalar dependencias
-Tenemos que instalar express, graphql, jwt, bcrypt y dotenv
+Tenemos que instalar express, graphql, jwt, bcrypt, graphql-http, y dotenv
+Actualizacion: el paquete express-graphql esta obsoleto y la documentacion re npm recomienda usar: graphql-http
 
 - express: Para manejar las peticiones HTTP.
 - graphql y express-graphql: Para gestionar la base de datos y consultas.
@@ -51,7 +52,7 @@ Tenemos que instalar express, graphql, jwt, bcrypt y dotenv
 - dotenv: Para manejar variables de entorno.
 
 ```bash
-npm install express graphql express-graphql jsonwebtoken bcryptjs dotenv
+npm install express graphql graphql-http jsonwebtoken bcryptjs dotenv
 ```
 
 Instalar nodemon
@@ -87,7 +88,8 @@ Aqui comenzaremos a levantar nuestro servidor con node y express
 
 Comencemos con la base da datos GraphQL, preparemos la conexión a la base de datos.
 
-### Archivo `database.js`
+## Archivo `database.js`
+
 En este archivo configuraremos nuestra base de datos utilizando GraphQL, usaremos un objeto de memoria como base de datos temporal.
 
 Necesitaremos GraphQLObjectType, GraphQLSchema, GraphQLString, GraphQLList del paquete de graphql que instalamos
@@ -183,3 +185,51 @@ module.exports = {
 
 Puedes visitar el el archivo src/database.js para visualizar el archivo completo.
 
+
+## Archivo `server.js`
+
+```javascript 
+//server
+//requerimos express para montar el servidor
+const express = require('express');
+//Requerimos graphql para consultas http
+const { createHandler } = require('graphql-http/lib/use/express');
+// Requerimos el esquema de la base de datos 
+const { schema } = require('./database');
+
+const app = express();
+
+// Configuración de GraphQL
+// Configuración de GraphQL
+app.use(
+    '/graphql',
+    createHandler({
+        schema: schema,
+        graphiql: true, // Interfaz para pruebas de GraphQL
+        context: (req) => ({ user: req.user }), // Pasar el usuario al contexto de GraphQL
+    })
+);
+
+module.exports = app;
+
+
+```
+
+## Archivo `index.js`
+
+Aqui arrancaremos el servidor
+
+```javascript
+//index.js
+require('dotenv').config();
+//importamos la configuracion del servidor
+const app = require('./server');
+
+//indicamos el puerto
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server on port http://localhost:${PORT}/graphql`);
+});
+
+```
