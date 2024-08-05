@@ -1,0 +1,21 @@
+{
+  "name": "backend-express-graphql-jwt-todo-api",
+  "version": "1.0.0",
+  "description": "Crearemos una API con node y express.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-graphql": "^0.12.0",
+    "graphql": "^16.9.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
